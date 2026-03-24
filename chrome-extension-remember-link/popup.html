@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>链接收藏管理器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      width: 380px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 16px;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 16px;
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 16px;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #667eea;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+      color: white;
+    }
+    
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .radio-item input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    
+    .input-group {
+      margin-top: 12px;
+    }
+    
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .file-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    .file-btn {
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .file-name {
+      font-size: 13px;
+      color: #666;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .preview-section {
+      display: none;
+    }
+    
+    .preview-section.show {
+      display: block;
+    }
+    
+    .preview-list {
+      max-height: 150px;
+      overflow-y: auto;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .preview-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .preview-list::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 3px;
+    }
+    
+    .preview-item {
+      padding: 8px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    
+    .preview-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .preview-title {
+      color: #333;
+      margin-bottom: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .preview-url {
+      color: #667eea;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .preview-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .message {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .message.show {
+      display: block;
+    }
+    
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .message.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .import-panel, .save-panel {
+      display: none;
+    }
+    
+    .import-panel.show, .save-panel.show {
+      display: block;
+    }
+    
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>链接收藏管理器</h1>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="currentTabs">0</div>
+        <div class="stat-label">当前标签页</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="savedLinks">0</div>
+        <div class="stat-label" id="savedLinksLabel">tmp收藏夹链接</div>
+      </div>
+    </div>
+    
+    <div class="btn-group">
+      <button id="saveBtn" class="btn btn-primary">保存链接</button>
+      <button id="importBtn" class="btn btn-secondary">导入链接</button>
+    </div>
+  </div>
+
+  <div class="card save-panel" id="savePanel">
+    <div class="section-title">选择保存方式</div>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="saveMode" value="file" checked>
+        <span>保存到文件</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="saveMode" value="bookmark">
+        <span>保存到书签</span>
+      </label>
+    </div>
+    
+    <div class="input-group" id="bookmarkInputGroup" style="display: none;">
+      <label>书签文件夹名称</label>
+      <input type="text" id="bookmarkFolder" value="tmp" placeholder="输入文件夹名称">
+    </div>
+    
+    <div class="action-bar">
+      <button id="confirmSaveBtn" class="btn btn-success">确认保存</button>
+      <button id="cancelSaveBtn" class="btn btn-danger">取消</button>
+    </div>
+  </div>
+
+  <div class="card import-panel" id="importPanel">
+    <div class="section-title">选择导入方式</div>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="importMode" value="file" checked>
+        <span>从文本文件</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="importMode" value="bookmark">
+        <span>从书签文件夹</span>
+      </label>
+    </div>
+    
+    <div class="input-group" id="importBookmarkInput" style="display: none;">
+      <label>书签文件夹名称</label>
+      <input type="text" id="importBookmarkFolder" value="tmp" placeholder="输入文件夹名称">
+    </div>
+    
+    <div class="file-input-wrapper" id="fileImportWrapper">
+      <input type="file" id="fileInput" class="file-input" accept=".txt">
+      <button class="file-btn" id="selectFileBtn">选择文件</button>
+      <span class="file-name" id="fileName">未选择文件</span>
+    </div>
+    
+    <div class="action-bar">
+      <button id="confirmImportBtn" class="btn btn-success">确认导入</button>
+      <button id="cancelImportBtn" class="btn btn-danger">取消</button>
+    </div>
+  </div>
+
+  <div class="card preview-section" id="previewSection">
+    <div class="section-title">链接预览 (<span id="previewCount">0</span>个)</div>
+    <div class="preview-list" id="previewList"></div>
+    <div class="btn-group">
+      <button id="confirmBtn" class="btn btn-success">确认</button>
+      <button id="cancelBtn" class="btn btn-danger">取消</button>
+    </div>
+  </div>
+
+  <div class="message" id="message"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

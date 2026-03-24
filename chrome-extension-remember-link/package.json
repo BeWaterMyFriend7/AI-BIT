@@ -1,0 +1,9 @@
+{
+  "name": "链接收藏管理器",
+  "version": "1.0.0",
+  "description": "内网环境下的一键保存和导入浏览器标签页链接工具",
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+  }
+}
