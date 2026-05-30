@@ -33,31 +33,57 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.activate = activate;
-exports.deactivate = deactivate;
+exports.OpenCodeTerminal = void 0;
 const vscode = __importStar(require("vscode"));
-const terminal_1 = require("./terminal");
-function activate(context) {
-    const terminal = new terminal_1.OpenCodeTerminal();
-    const startCmd = vscode.commands.registerCommand('opencode.start', () => {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders || workspaceFolders.length === 0) {
-            vscode.window.showWarningMessage('请先打开一个工作区');
+const TERMINAL_NAME = 'OpenCode';
+class OpenCodeTerminal {
+    constructor() {
+        this.terminal = null;
+    }
+    createOrShow(projectPath) {
+        if (this.terminal) {
+            this.terminal.show();
             return;
         }
-        terminal.createOrShow(workspaceFolders[0].uri.fsPath);
-    });
-    const stopCmd = vscode.commands.registerCommand('opencode.stop', () => {
-        terminal.dispose();
-    });
-    context.subscriptions.push(startCmd, stopCmd);
-    // Status bar item
-    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-    statusBarItem.command = 'opencode.start';
-    statusBarItem.text = '$(terminal) OpenCode';
-    statusBarItem.tooltip = '点击启动 OpenCode 终端';
-    statusBarItem.show();
-    context.subscriptions.push(statusBarItem);
+        const exePath = vscode.workspace.getConfiguration('opencode').get('executablePath', 'opencode');
+        this.terminal = vscode.window.createTerminal({
+            name: TERMINAL_NAME,
+            cwd: projectPath,
+            shellPath: exePath
+        });
+        this.terminal.show();
+        vscode.window.onDidCloseTerminal((t) => {
+            if (t === this.terminal) {
+                this.terminal = null;
+            }
+        });
+    }
+    sendText(text) {
+        if (!this.terminal) {
+            vscode.window.showWarningMessage('请先启动 OpenCode 终端');
+            return;
+        }
+        this.terminal.show();
+        this.terminal.sendText(text);
+    }
+    sendTextAutoEnter(text) {
+        if (!this.terminal) {
+            vscode.window.showWarningMessage('请先启动 OpenCode 终端');
+            return;
+        }
+        this.terminal.show();
+        this.terminal.sendText(text);
+        this.terminal.sendText('\n');
+    }
+    exists() {
+        return this.terminal !== null;
+    }
+    dispose() {
+        if (this.terminal) {
+            this.terminal.dispose();
+            this.terminal = null;
+        }
+    }
 }
-function deactivate() { }
-//# sourceMappingURL=extension.js.map
+exports.OpenCodeTerminal = OpenCodeTerminal;
+//# sourceMappingURL=terminal.js.map
