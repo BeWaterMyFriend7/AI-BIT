@@ -1,0 +1,55 @@
+<idea-plugin>
+    <id>com.opencode.idea</id>
+    <name>OpenCode</name>
+    <vendor>local</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow
+            id="OpenCode Session"
+            anchor="bottom"
+            icon="AllIcons.Actions.Show"
+            factoryClass="com.opencode.idea.SessionToolWindowFactory"/>
+
+        <applicationService
+            serviceImplementation="com.opencode.idea.settings.OpenCodeSettings"/>
+
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.opencode.idea.settings.OpenCodeSettingsConfigurable"
+            id="com.opencode.idea.settings"
+            displayName="OpenCode"/>
+    </extensions>
+
+    <actions>
+        <group id="OpenCode.EditorPopup" text="OpenCode"
+               popup="true" icon="AllIcons.Actions.Show">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <action id="opencode.sendSelectedText"
+                    class="com.opencode.idea.ContextCollector$SendSelectedTextAction"
+                    text="发送选中内容"/>
+            <action id="opencode.sendFilePath"
+                    class="com.opencode.idea.ContextCollector$SendFilePathAction"
+                    text="发送文件路径"/>
+            <separator/>
+            <action id="opencode.sendPresetUnitTest"
+                    class="com.opencode.idea.PromptPresetAction$UnitTestAction"
+                    text="单测：写单测"/>
+            <action id="opencode.sendPresetOptimize"
+                    class="com.opencode.idea.PromptPresetAction$OptimizeAction"
+                    text="优化：优化代码"/>
+        </group>
+
+        <group id="OpenCode.ProjectViewPopup" text="OpenCode"
+               popup="true" icon="AllIcons.Actions.Show">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <action id="opencode.sendFilePathFromProject"
+                    class="com.opencode.idea.ContextCollector$SendFilePathAction"
+                    text="发送文件路径"/>
+            <reference ref="opencode.sendPresetUnitTest"/>
+            <reference ref="opencode.sendPresetOptimize"/>
+        </group>
+    </actions>
+</idea-plugin>
