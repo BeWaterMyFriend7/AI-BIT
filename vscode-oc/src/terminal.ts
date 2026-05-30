@@ -4,6 +4,7 @@ const TERMINAL_NAME = 'OpenCode';
 
 export class OpenCodeTerminal {
     private terminal: vscode.Terminal | null = null;
+    private closeListener: vscode.Disposable | null = null;
 
     createOrShow(projectPath: string): void {
         if (this.terminal) {
@@ -18,7 +19,10 @@ export class OpenCodeTerminal {
         });
         this.terminal.show();
 
-        vscode.window.onDidCloseTerminal((t) => {
+        if (this.closeListener) {
+            this.closeListener.dispose();
+        }
+        this.closeListener = vscode.window.onDidCloseTerminal((t) => {
             if (t === this.terminal) {
                 this.terminal = null;
             }
@@ -35,13 +39,8 @@ export class OpenCodeTerminal {
     }
 
     sendTextAutoEnter(text: string): void {
-        if (!this.terminal) {
-            vscode.window.showWarningMessage('请先启动 OpenCode 终端');
-            return;
-        }
-        this.terminal.show();
-        this.terminal.sendText(text);
-        this.terminal.sendText('\n');
+        this.sendText(text);
+        this.terminal?.sendText('\n');
     }
 
     exists(): boolean {
@@ -49,6 +48,10 @@ export class OpenCodeTerminal {
     }
 
     dispose(): void {
+        if (this.closeListener) {
+            this.closeListener.dispose();
+            this.closeListener = null;
+        }
         if (this.terminal) {
             this.terminal.dispose();
             this.terminal = null;
