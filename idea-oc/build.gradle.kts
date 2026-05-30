@@ -18,6 +18,11 @@ intellij {
 }
 
 tasks {
+    patchPluginXml {
+        sinceBuild.set("231")
+        untilBuild.set("")
+    }
+
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"

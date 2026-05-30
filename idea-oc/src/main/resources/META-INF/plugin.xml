@@ -3,6 +3,10 @@
     <name>OpenCode</name>
     <vendor>local</vendor>
 
+    <description>Integrate OpenCode CLI into IntelliJ IDEA</description>
+
+    <idea-version since-build="231"/>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.terminal</depends>
 
