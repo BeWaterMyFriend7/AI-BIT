@@ -1,0 +1,73 @@
+{
+  "name": "vscode-oc",
+  "displayName": "OpenCode",
+  "description": "Integrate OpenCode CLI into VS Code",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "opencode.sendSelectedText", "title": "发送选中内容" },
+      { "command": "opencode.sendFilePath", "title": "发送文件路径" },
+      { "command": "opencode.sendPresetUnitTest", "title": "单测：写单测" },
+      { "command": "opencode.sendPresetOptimize", "title": "优化：优化代码" },
+      { "command": "opencode.start", "title": "启动 OpenCode" },
+      { "command": "opencode.stop", "title": "停止 OpenCode" },
+      { "command": "opencode.showSession", "title": "打开会话历史" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "opencode.sendSelectedText", "when": "editorHasSelection", "group": "opencode@1" },
+        { "command": "opencode.sendPresetUnitTest", "when": "editorHasSelection", "group": "opencode@3" },
+        { "command": "opencode.sendPresetOptimize", "when": "editorHasSelection", "group": "opencode@4" }
+      ],
+      "explorer/context": [
+        { "command": "opencode.sendFilePath", "group": "opencode@1" },
+        { "command": "opencode.sendPresetUnitTest", "group": "opencode@3" },
+        { "command": "opencode.sendPresetOptimize", "group": "opencode@4" }
+      ]
+    },
+    "configuration": {
+      "title": "OpenCode",
+      "properties": {
+        "opencode.executablePath": {
+          "type": "string",
+          "default": "opencode",
+          "description": "opencode 可执行文件路径"
+        },
+        "opencode.port": {
+          "type": "number",
+          "default": 0,
+          "description": "端口号，0 为随机"
+        },
+        "opencode.promptPresets": {
+          "type": "array",
+          "default": [
+            { "label": "单测", "prompt": "为如下代码写单测：\n" },
+            { "label": "优化", "prompt": "优化如下代码：\n" }
+          ],
+          "description": "提示词预设列表",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "prompt": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.0.0"
+  }
+}
