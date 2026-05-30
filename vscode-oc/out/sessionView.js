@@ -39,6 +39,7 @@ class SessionViewProvider {
     constructor(extensionUri) {
         this.extensionUri = extensionUri;
         this._anchors = [];
+        this.maxAnchors = 200;
     }
     resolveWebviewView(webviewView) {
         this._view = webviewView;
@@ -53,6 +54,12 @@ class SessionViewProvider {
             if (msg.type === 'refresh') {
                 this.sendAnchors();
             }
+            if (msg.type === 'jumpTo') {
+                webviewView.webview.postMessage({
+                    type: 'highlightAnchor',
+                    index: msg.index
+                });
+            }
         });
     }
     appendAnchor(input, output) {
@@ -60,6 +67,9 @@ class SessionViewProvider {
         const time = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
         const summary = input.substring(0, 60).replace(/\n/g, ' ');
         this._anchors.push({ time, summary, input, output });
+        if (this._anchors.length > this.maxAnchors) {
+            this._anchors.shift();
+        }
         this.sendAnchors();
     }
     sendAnchors() {

@@ -75,3 +75,10 @@ body {
   margin: 6px 0;
 }
 .hidden { display: none; }
+.anchor-item.flash {
+  animation: anchor-flash 0.6s ease-out;
+}
+@keyframes anchor-flash {
+  0% { background: var(--vscode-focusBorder); }
+  100% { background: transparent; }
+}

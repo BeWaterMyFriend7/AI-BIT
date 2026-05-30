@@ -11,6 +11,7 @@ export class SessionViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'opencode.sessionView';
     private _view?: vscode.WebviewView;
     private _anchors: Anchor[] = [];
+    private readonly maxAnchors = 200;
 
     constructor(private readonly extensionUri: vscode.Uri) {}
 
@@ -30,6 +31,12 @@ export class SessionViewProvider implements vscode.WebviewViewProvider {
             if (msg.type === 'refresh') {
                 this.sendAnchors();
             }
+            if (msg.type === 'jumpTo') {
+                webviewView.webview.postMessage({
+                    type: 'highlightAnchor',
+                    index: msg.index
+                });
+            }
         });
     }
 
@@ -38,6 +45,9 @@ export class SessionViewProvider implements vscode.WebviewViewProvider {
         const time = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
         const summary = input.substring(0, 60).replace(/\n/g, ' ');
         this._anchors.push({ time, summary, input, output });
+        if (this._anchors.length > this.maxAnchors) {
+            this._anchors.shift();
+        }
         this.sendAnchors();
     }
 

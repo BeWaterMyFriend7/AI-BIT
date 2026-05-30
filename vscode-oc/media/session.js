@@ -48,7 +48,7 @@
     }
 
     function positionPreview(e) {
-        var rect = e.target.getBoundingClientRect();
+        var rect = e.currentTarget.getBoundingClientRect();
         preview.style.left = Math.min(rect.right + 8, window.innerWidth - 410) + 'px';
         preview.style.top = Math.min(rect.top, window.innerHeight - 310) + 'px';
     }
@@ -68,6 +68,14 @@
         if (msg.type === 'updateAnchors') {
             anchors = msg.anchors;
             renderAnchors();
+        }
+        if (msg.type === 'highlightAnchor') {
+            var el = document.querySelector('.anchor-item[data-index="' + msg.index + '"]');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                el.classList.add('flash');
+                setTimeout(function () { el.classList.remove('flash'); }, 600);
+            }
         }
     });
 })();
