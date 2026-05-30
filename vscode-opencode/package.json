@@ -1,0 +1,68 @@
+{
+  "name": "vscode-opencode",
+  "displayName": "Opencode IDE Assistant",
+  "description": "将 IDE 与 Opencode 融合，右键选中文本/文件一键发送到 Opencode 对话",
+  "version": "0.1.0",
+  "publisher": "ai-bit",
+  "license": "MIT",
+  "engines": { "vscode": "^1.74.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "opencode.sendToChat", "title": "发送到 Opencode", "category": "Opencode" },
+      { "command": "opencode.explainCode", "title": "解释代码", "category": "Opencode" },
+      { "command": "opencode.writeTests", "title": "写单测", "category": "Opencode" },
+      { "command": "opencode.optimizeCode", "title": "优化代码", "category": "Opencode" },
+      { "command": "opencode.startTUI", "title": "启动 Opencode 对话", "category": "Opencode" },
+      { "command": "opencode.stopTUI", "title": "停止 Opencode 对话", "category": "Opencode" },
+      { "command": "opencode.newSession", "title": "新开会话", "category": "Opencode" },
+      { "command": "opencode.showMenu", "title": "Opencode 菜单", "category": "Opencode" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "opencode.explainCode", "when": "editorHasSelection", "group": "opencode@1" },
+        { "command": "opencode.writeTests", "when": "editorHasSelection", "group": "opencode@2" },
+        { "command": "opencode.optimizeCode", "when": "editorHasSelection", "group": "opencode@3" },
+        { "command": "opencode.sendToChat", "when": "editorHasSelection", "group": "opencode@4" }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "opencode-sidebar", "title": "Opencode Sessions", "icon": "$(hubot)" }
+      ]
+    },
+    "views": {
+      "opencode-sidebar": [
+        { "id": "opencode.chatViewer", "name": "会话历史", "type": "webview" }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Opencode",
+      "properties": {
+        "opencode.opencodePath": { "type": "string", "default": "opencode", "description": "opencode 可执行文件路径" },
+        "opencode.defaultModel": { "type": "string", "default": "", "description": "默认使用的 AI 模型" },
+        "opencode.systemPrompts": {
+          "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "prompt": { "type": "string" } } },
+          "default": [
+            { "name": "单测", "prompt": "为如下代码写单测" },
+            { "name": "优化", "prompt": "优化如下代码" }
+          ],
+          "description": "自定义系统提示词模板"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "typescript": "^5.0.0"
+  }
+}

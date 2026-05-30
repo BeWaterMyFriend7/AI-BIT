@@ -1,1 +1,8 @@
+node_modules/
+out/
+build/
+.gradle/
+*.vsix
+.idea/
+.vscode/
 .ruff_cache

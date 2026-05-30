@@ -32,16 +32,6 @@
     </extensions>
 
     <actions>
-        <action id="opencode.startTerminal"
-                class="com.opencode.idea.OpenCodeTerminalRunner"
-                text="启动 OpenCode"
-                description="Start OpenCode terminal"
-                icon="AllIcons.Actions.Execute"/>
-        <action id="opencode.stopTerminal"
-                class="com.opencode.idea.OpenCodeTerminalRunner"
-                text="停止 OpenCode"
-                description="Stop OpenCode terminal"/>
-
         <group id="OpenCode.EditorPopup" text="OpenCode"
                popup="true" icon="AllIcons.Actions.Show">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>

@@ -67,8 +67,6 @@ function activate(context) {
         vscode.commands.executeCommand('workbench.view.extension.opencode-session');
     });
     context.subscriptions.push(showSessionCmd);
-    sessionProvider.appendAnchor('请为 getUserById 方法写单元测试', '好的，以下是单元测试...');
-    sessionProvider.appendAnchor('优化上面的代码', '这是优化后的版本...');
     const sessionStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 99);
     sessionStatusBarItem.command = 'opencode.showSession';
     sessionStatusBarItem.text = '$(history) 会话';

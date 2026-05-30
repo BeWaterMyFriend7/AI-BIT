@@ -81,10 +81,7 @@ body {
     (function () {
       var anchorList = document.getElementById('anchorList');
       var preview = document.getElementById('preview');
-      var anchors = [
-        { time: '14:30', summary: '请为 getUserById 写单测', input: '请为 getUserById 方法写单元测试', output: '好的，以下是单元测试的实现...' },
-        { time: '14:35', summary: '优化上面的代码', input: '优化上面的代码', output: '这是优化后的版本...' }
-      ];
+      var anchors = [];
 
       function render() {
         anchorList.innerHTML = '';

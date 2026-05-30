@@ -1,0 +1,68 @@
+<idea-plugin>
+    <id>com.opencode.plugin</id>
+    <name>Opencode IDE Assistant</name>
+    <vendor>AI-BIT</vendor>
+
+    <description><![CDATA[
+    将 IntelliJ IDEA 与 Opencode 融合。
+    右键选中代码/文件一键发送到 Opencode，管理对话会话和系统提示词。
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable
+            id="com.opencode.plugin.OpencodeSettingsConfigurable"
+            instance="com.opencode.plugin.OpencodeSettingsConfigurable"
+            displayName="Opencode"
+            groupId="tools"/>
+
+        <applicationService
+            serviceImplementation="com.opencode.plugin.OpencodeSettings"/>
+
+        <toolWindow
+            id="Opencode Sessions"
+            anchor="right"
+            factoryClass="com.opencode.plugin.ui.ChatViewerToolWindowFactory"
+            icon="AllIcons.Actions.PreviewDetails"/>
+
+        <statusBarWidgetFactory
+            id="com.opencode.plugin.OpencodeStatusBarWidget"
+            implementation="com.opencode.plugin.ui.OpencodeStatusBarWidgetFactory"/>
+
+        <postStartupActivity
+            implementation="com.opencode.plugin.OpencodeStartupActivity"/>
+
+        <notificationGroup
+            id="Opencode Notifications"
+            displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <group id="Opencode.Actions"
+               text="Opencode"
+               popup="true"
+               icon="AllIcons.Actions.Find">
+            <action id="Opencode.ExplainCode"
+                    class="com.opencode.plugin.actions.ExplainCodeAction"
+                    text="解释代码"
+                    description="解释选中的代码"/>
+            <action id="Opencode.WriteTests"
+                    class="com.opencode.plugin.actions.WriteTestsAction"
+                    text="写单测"
+                    description="为选中的代码写单测"/>
+            <action id="Opencode.OptimizeCode"
+                    class="com.opencode.plugin.actions.OptimizeCodeAction"
+                    text="优化代码"
+                    description="优化选中的代码"/>
+            <action id="Opencode.SendToChat"
+                    class="com.opencode.plugin.actions.SendToChatAction"
+                    text="发送到 Opencode"
+                    description="发送选中代码到 Opencode 对话"/>
+
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </group>
+    </actions>
+</idea-plugin>
