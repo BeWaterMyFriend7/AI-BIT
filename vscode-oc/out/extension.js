@@ -37,6 +37,7 @@ exports.activate = activate;
 exports.deactivate = deactivate;
 const vscode = __importStar(require("vscode"));
 const terminal_1 = require("./terminal");
+const commands_1 = require("./commands");
 function activate(context) {
     const terminal = new terminal_1.OpenCodeTerminal();
     const startCmd = vscode.commands.registerCommand('opencode.start', () => {
@@ -55,9 +56,10 @@ function activate(context) {
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     statusBarItem.command = 'opencode.start';
     statusBarItem.text = '$(terminal) OpenCode';
-    statusBarItem.tooltip = '点击启动 OpenCode 终端';
+    statusBarItem.tooltip = '点击启动 OpenCode 终端 | 启动后可在终端中与 AI 对话';
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
+    (0, commands_1.registerCommands)(context, terminal);
 }
 function deactivate() { }
 //# sourceMappingURL=extension.js.map

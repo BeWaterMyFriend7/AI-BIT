@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { OpenCodeTerminal } from './terminal';
+import { registerCommands } from './commands';
 
 export function activate(context: vscode.ExtensionContext) {
     const terminal = new OpenCodeTerminal();
@@ -26,6 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
     statusBarItem.tooltip = '点击启动 OpenCode 终端 | 启动后可在终端中与 AI 对话';
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
+
+    registerCommands(context, terminal);
 }
 
 export function deactivate() {}
