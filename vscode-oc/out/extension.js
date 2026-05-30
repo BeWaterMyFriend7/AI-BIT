@@ -38,6 +38,7 @@ exports.deactivate = deactivate;
 const vscode = __importStar(require("vscode"));
 const terminal_1 = require("./terminal");
 const commands_1 = require("./commands");
+const sessionView_1 = require("./sessionView");
 function activate(context) {
     const terminal = new terminal_1.OpenCodeTerminal();
     const startCmd = vscode.commands.registerCommand('opencode.start', () => {
@@ -60,6 +61,18 @@ function activate(context) {
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
     (0, commands_1.registerCommands)(context, terminal);
+    const sessionProvider = new sessionView_1.SessionViewProvider(context.extensionUri);
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(sessionView_1.SessionViewProvider.viewType, sessionProvider));
+    const showSessionCmd = vscode.commands.registerCommand('opencode.showSession', () => {
+        vscode.commands.executeCommand('workbench.view.extension.opencode-session');
+    });
+    context.subscriptions.push(showSessionCmd);
+    const sessionStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 99);
+    sessionStatusBarItem.command = 'opencode.showSession';
+    sessionStatusBarItem.text = '$(history) 会话';
+    sessionStatusBarItem.tooltip = '打开会话历史';
+    sessionStatusBarItem.show();
+    context.subscriptions.push(sessionStatusBarItem);
 }
 function deactivate() { }
 //# sourceMappingURL=extension.js.map

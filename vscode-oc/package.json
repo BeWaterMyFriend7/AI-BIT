@@ -30,6 +30,24 @@
         { "command": "opencode.sendPresetOptimize", "group": "opencode@4" }
       ]
     },
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "opencode-session",
+          "title": "OpenCode 会话",
+          "icon": "$(history)"
+        }
+      ]
+    },
+    "views": {
+      "opencode-session": [
+        {
+          "type": "webview",
+          "id": "opencode.sessionView",
+          "name": "会话历史"
+        }
+      ]
+    },
     "configuration": {
       "title": "OpenCode",
       "properties": {
