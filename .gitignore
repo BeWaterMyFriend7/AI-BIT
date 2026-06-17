@@ -8,3 +8,5 @@ build/
 .ruff_cache
 **/__pycache__/
 skill-share/
+
+intellij-opencode/
