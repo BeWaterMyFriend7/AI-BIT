@@ -6,3 +6,6 @@ build/
 .idea/
 .vscode/
 .ruff_cache
+*/__pycache__/
+
+skill-share/
